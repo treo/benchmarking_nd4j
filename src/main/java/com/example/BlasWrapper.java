@@ -19,7 +19,7 @@ public class BlasWrapper {
 
         static {
             // Only needed for mkl on RC3.8
-            System.loadLibrary("mkl_rt");
+            //System.loadLibrary("mkl_rt");
         }
     }
 
