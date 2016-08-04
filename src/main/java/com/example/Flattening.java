@@ -6,7 +6,7 @@ import org.openjdk.jmh.annotations.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class Nd4j {
+public class Flattening {
 
     @State(Scope.Thread)
     public static class SetupState {
