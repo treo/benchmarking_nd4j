@@ -59,7 +59,7 @@ public class MatrixMul {
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_50(SetupState state) {
-        state.nd_w1.get(50).mmul(state.nd_input);
+        state.nd_w1.get(50).mmuli(state.nd_input, state.nd_h1.get(50));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -69,7 +69,7 @@ public class MatrixMul {
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_100(SetupState state) {
-        state.nd_w1.get(100).mmul(state.nd_input);
+        state.nd_w1.get(100).mmuli(state.nd_input, state.nd_h1.get(100));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -79,7 +79,7 @@ public class MatrixMul {
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_200(SetupState state) {
-        state.nd_w1.get(200).mmul(state.nd_input);
+        state.nd_w1.get(200).mmuli(state.nd_input, state.nd_h1.get(200));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -88,7 +88,7 @@ public class MatrixMul {
     }
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_300(SetupState state) {
-        state.nd_w1.get(300).mmul(state.nd_input);
+        state.nd_w1.get(300).mmuli(state.nd_input, state.nd_h1.get(300));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -97,7 +97,7 @@ public class MatrixMul {
     }
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_400(SetupState state) {
-        state.nd_w1.get(400).mmul(state.nd_input);
+        state.nd_w1.get(400).mmuli(state.nd_input, state.nd_h1.get(400));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -106,7 +106,7 @@ public class MatrixMul {
     }
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_500(SetupState state) {
-        state.nd_w1.get(500).mmul(state.nd_input);
+        state.nd_w1.get(500).mmuli(state.nd_input, state.nd_h1.get(500));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -115,7 +115,7 @@ public class MatrixMul {
     }
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_600(SetupState state) {
-        state.nd_w1.get(600).mmul(state.nd_input);
+        state.nd_w1.get(600).mmuli(state.nd_input, state.nd_h1.get(600));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -124,7 +124,7 @@ public class MatrixMul {
     }
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_700(SetupState state) {
-        state.nd_w1.get(700).mmul(state.nd_input);
+        state.nd_w1.get(700).mmuli(state.nd_input, state.nd_h1.get(700));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -133,7 +133,7 @@ public class MatrixMul {
     }
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_800(SetupState state) {
-        state.nd_w1.get(800).mmul(state.nd_input);
+        state.nd_w1.get(800).mmuli(state.nd_input, state.nd_h1.get(800));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -142,7 +142,7 @@ public class MatrixMul {
     }
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_900(SetupState state) {
-        state.nd_w1.get(900).mmul(state.nd_input);
+        state.nd_w1.get(900).mmuli(state.nd_input, state.nd_h1.get(900));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -151,7 +151,7 @@ public class MatrixMul {
     }
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void nd4j_mult_1000(SetupState state) {
-        state.nd_w1.get(1000).mmul(state.nd_input);
+        state.nd_w1.get(1000).mmuli(state.nd_input, state.nd_h1.get(1000));
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
