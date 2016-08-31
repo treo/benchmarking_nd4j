@@ -59,7 +59,7 @@ public class NativeOps {
     }
 
 
-    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
     public void pairwiseOp1(SetupState state) throws IOException {
         state.array1.addiRowVector(state.array2);
     }
