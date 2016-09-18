@@ -17,6 +17,7 @@ public class NativeOps {
     public static class SetupState {
         INDArray array = Nd4j.ones(1024, 1024);
         INDArray arrayRow = Nd4j.linspace(1, 1024, 1024);
+        INDArray arrayColumn = Nd4j.linspace(1, 1024, 1024).reshape(1024,1);
         INDArray array1 = Nd4j.linspace(1, 20480, 20480);
         INDArray array2 = Nd4j.linspace(1, 20480, 20480);
 
@@ -32,6 +33,16 @@ public class NativeOps {
         }
     }
 
+
+    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+    public void broadcastColumn(SetupState state) throws IOException {
+        state.array.addiColumnVector(state.arrayColumn);
+    }
+
+    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+    public void broadcastRow(SetupState state) throws IOException {
+        state.array.addiRowVector(state.arrayRow);
+    }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
     public void transformOp(SetupState state) throws IOException {
@@ -70,11 +81,6 @@ public class NativeOps {
     }
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
-    public void broadcastOp1(SetupState state) throws IOException {
-        state.array3.addiRowVector(state.arrayRow3);
-    }
-
-    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
     public void reduceOp1(SetupState state) throws IOException {
         state.array.sum(0);
     }
@@ -88,5 +94,6 @@ public class NativeOps {
     public void scalarOp1(SetupState state) throws IOException {
         state.array2.addi(0.5f);
     }
+
 
 }
