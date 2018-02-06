@@ -14,7 +14,7 @@ public class NeanderthalComparision_2048x2048 {
         public int size = 2048;
         public INDArray m1 = Nd4j.ones(size, size);
         public INDArray m2 = Nd4j.ones(m1.shape());
-        public INDArray r = Nd4j.createUninitialized(m1.shape(), 'c');
+        public INDArray r = Nd4j.createUninitialized(m1.shape(), 'f');
     }
 
 
