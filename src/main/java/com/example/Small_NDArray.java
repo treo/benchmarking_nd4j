@@ -2,6 +2,7 @@ package com.example;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.nativeblas.NativeOpsHolder;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;
@@ -14,9 +15,10 @@ public class Small_NDArray {
         public INDArray array1 = Nd4j.ones(1<<8);
         public INDArray array2 = Nd4j.ones(1<<8);
 
-        static {
-            // Only needed for mkl on RC3.8
-            //System.loadLibrary("mkl_rt");
+        @Setup
+        public void setup(){
+            NativeOpsHolder.getInstance().getDeviceNativeOps().setElementThreshold(16384);
+            NativeOpsHolder.getInstance().getDeviceNativeOps().setTADThreshold(64);
         }
     }
 
