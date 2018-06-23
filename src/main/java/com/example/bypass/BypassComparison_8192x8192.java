@@ -1,5 +1,7 @@
 package com.example.bypass;
 
+import org.bytedeco.javacpp.FloatPointer;
+import org.bytedeco.javacpp.openblas;
 import org.nd4j.linalg.api.blas.Level3;
 import org.nd4j.linalg.api.blas.params.GemmParams;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -11,12 +13,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
-public class BypassComparision_2x2 {
+public class BypassComparison_8192x8192 {
 
 
     @State(Scope.Thread)
     public static class SetupState {
-        public int size = 2;
+        public int size = 8192;
         public INDArray m1 = Nd4j.ones(size, size);
         public INDArray m2 = Nd4j.ones(m1.shape());
         public INDArray r = Nd4j.createUninitialized(m1.shape(), 'f');
@@ -24,6 +26,10 @@ public class BypassComparision_2x2 {
         public Level3 wrapper = Nd4j.getBlasWrapper().level3();
         public Method sgemm;
         public GemmParams params = new GemmParams(m1, m2, r);
+
+        FloatPointer a = (FloatPointer) params.getA().data().addressPointer();
+        FloatPointer b = (FloatPointer) params.getB().data().addressPointer();
+        FloatPointer c = (FloatPointer) params.getC().data().addressPointer();
 
         @Setup(Level.Trial)
         public void doSetup(){
@@ -38,7 +44,7 @@ public class BypassComparision_2x2 {
     }
 
 
-    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.SECONDS)
     public void gemm(SetupState state, Blackhole bh) {
         final GemmParams params = state.params;
         try {
@@ -49,6 +55,13 @@ public class BypassComparision_2x2 {
             e.printStackTrace();
         }
     }
+
+    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+    public void cblas_gemm(SetupState state, Blackhole bh) {
+        final GemmParams params = state.params;
+        openblas.cblas_sgemm(102,111, 111, params.getM(), params.getN(), params.getK(), 1.0f, state.a, params.getLda(), state.b, params.getLdb(), 0.0f, state.c, params.getLdc());
+    }
+
 
 
 
