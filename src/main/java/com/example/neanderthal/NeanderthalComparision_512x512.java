@@ -19,9 +19,8 @@ public class NeanderthalComparision_512x512 {
 
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    public void mmuli(SetupState state) {
-        state.m1.mmuli(state.m2, state.r);
+    public void gemm(SetupState state) {
+        Nd4j.gemm(state.m1, state.m2, state.r, false, false, 1.0, 0.0);
     }
-
 
 }

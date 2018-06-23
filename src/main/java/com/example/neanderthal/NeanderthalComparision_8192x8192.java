@@ -11,17 +11,14 @@ public class NeanderthalComparision_8192x8192 {
 
     @State(Scope.Thread)
     public static class SetupState {
-        public int size = 4096;
-        public INDArray m1 = Nd4j.ones(size, size);
-        public INDArray m2 = Nd4j.ones(m1.shape());
+        public int size = 8192;
+        public INDArray m1 = Nd4j.createUninitialized(new int[]{size, size}, 'f');
+        public INDArray m2 = Nd4j.createUninitialized(m1.shape(), 'f');
         public INDArray r = Nd4j.createUninitialized(m1.shape(), 'f');
     }
 
-
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.SECONDS)
-    public void mmuli(SetupState state) {
-        state.m1.mmuli(state.m2, state.r);
+    public void gemm(SetupState state) {
+        Nd4j.gemm(state.m1, state.m2, state.r, false, false, 1.0, 0.0);
     }
-
-
 }
