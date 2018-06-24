@@ -5,7 +5,6 @@ import org.bytedeco.javacpp.openblas;
 import org.nd4j.linalg.api.blas.Level3;
 import org.nd4j.linalg.api.blas.params.GemmParams;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.ops.aggregates.impl.AggregateGEMM;
 import org.nd4j.linalg.factory.Nd4j;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -13,10 +12,6 @@ import org.openjdk.jmh.infra.Blackhole;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
-
-import static org.bytedeco.javacpp.openblas.*;
-import static org.bytedeco.javacpp.openblas.CblasConjTrans;
-import static org.bytedeco.javacpp.openblas.CblasNoTrans;
 
 public class BypassComparison_128x128 {
 
@@ -59,79 +54,28 @@ public class BypassComparison_128x128 {
 
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-    public void cblas_gemm(SetupState state, Blackhole bh) {
+    public void mmuli(SetupState state) {
+        state.m1.mmuli(state.m2, state.r);
+    }
+
+    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+    public void nd4j_gemm(SetupState state) {
+        Nd4j.gemm(state.m1, state.m2, state.r, false, false, 1.0, 0.0);
+    }
+
+    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+    public void openblas_cblas_gemm(SetupState state, Blackhole bh) {
         openblas.cblas_sgemm(102,111, 111, state.M, state.N, state.K, 1.0f, state.a, state.lda, state.b, state.ldb, 0.0f, state.c, state.ldc);
     }
 
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-    public void sgemm(SetupState state, Blackhole bh) {
+    public void level3_sgemm(SetupState state, Blackhole bh) {
         final GemmParams params = state.params;
         try {
             state.sgemm.invoke(state.wrapper, params.getA().ordering(), params.getTransA(), params.getTransB(), params.getM(), params.getN(), params.getK(), (float)1.0, params.getA(), params.getLda(), params.getB(), params.getLdb(), (float)0.0, params.getC(), params.getLdc());
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-    public void fake_sgemm(SetupState state, Blackhole bh) {
-        final GemmParams params = state.params;
-        if (!Nd4j.isFallbackModeEnabled()) {
-            final int a1 = convertOrder('f');
-            final int a2 = convertTranspose(params.getTransA());
-            final int a3 = convertTranspose(params.getTransB());
-            final FloatPointer b1 = (FloatPointer) params.getA().data().addressPointer();
-            final FloatPointer b2 = (FloatPointer) params.getB().data().addressPointer();
-            final FloatPointer b3 = (FloatPointer) params.getC().data().addressPointer();
-            bh.consume(a1);
-            bh.consume(a2);
-            bh.consume(a3);
-            bh.consume(b1);
-            bh.consume(b2);
-            bh.consume(b3);
-        } else {
-            Nd4j.getExecutioner()
-                    .exec(new AggregateGEMM('f', 0, 0, 0, 0, 0, 0, null, 0, null, 0, 0, null, 0));
-        }
-
-    }
-
-
-    static int convertOrder(int from) {
-        switch (from) {
-            case 'c':
-            case 'C':
-                return CblasRowMajor;
-            case 'f':
-            case 'F':
-                return CblasColMajor;
-            default:
-                return CblasColMajor;
-        }
-    }
-
-    /**
-     * Converts a character to its proper enum
-     * t -> transpose
-     * n -> no transpose
-     * c -> conj
-     */
-    static int convertTranspose(int from) {
-        switch (from) {
-            case 't':
-            case 'T':
-                return CblasTrans;
-            case 'n':
-            case 'N':
-                return CblasNoTrans;
-            case 'c':
-            case 'C':
-                return CblasConjTrans;
-            default:
-                return CblasNoTrans;
         }
     }
 }

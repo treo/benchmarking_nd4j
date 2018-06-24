@@ -30,6 +30,17 @@
                 <updatePolicy>daily</updatePolicy>  <!-- Optional, update daily -->
             </snapshots>
         </repository>
+        <repository>
+            <id>clojars</id>
+            <url>http://clojars.org/repo/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>  <!-- Optional, update daily -->
+            </snapshots>
+        </repository>
     </repositories>
 
     <properties>
@@ -40,7 +51,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <nd4j.version>1.0.0-beta</nd4j.version>
+        <nd4j.version>1.0.0-SNAPSHOT</nd4j.version>
     </properties>
 
 
@@ -62,15 +73,45 @@
             <version>${nd4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>mkl-platform</artifactId>
+            <version>2018.3-1.4.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>uncomplicate</groupId>
+            <artifactId>neanderthal</artifactId>
+            <version>0.19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+            <version>1.9.0</version>
         </dependency>
     </dependencies>
 
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.theoryinpractise</groupId>
+                <artifactId>clojure-maven-plugin</artifactId>
+                <version>1.8.1</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>execution1</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -100,6 +141,18 @@
                             </transformers>
                             <filters>
                                 <filter>
+                                    <artifact>uncomplicate:neanderthal</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.clojure:clojure</artifact>
+                                    <excludes>
+                                        <exclude>clojure/pprint/proxy$java/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
                                     <!--
                                         Shading signed JARs will fail without this.
                                         http://stackoverflow.com/questions/999489/invalid-signature-file-when-attempting-to-run-a-jar
@@ -119,6 +172,7 @@
         </plugins>
         <pluginManagement>
             <plugins>
+
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>2.5</version>
