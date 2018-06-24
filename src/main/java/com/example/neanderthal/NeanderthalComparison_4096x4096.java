@@ -8,39 +8,46 @@ import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;
 
-public class NeanderthalComparision_128x128 {
+public class NeanderthalComparison_4096x4096 {
 
 
     @State(Scope.Thread)
     public static class SetupState {
-        public int size;
-        public INDArray m1;
-        public INDArray m2;
-        public INDArray r;
+        public int size = 4096;
+        INDArray m1;
+        INDArray m2;
+        INDArray r;
         IFn mm;
+        IFn fmap;
         IFn fge;
         Object n_m1;
         Object n_m2;
         Object n_r;
 
-        @Setup(Level.Trial)
+        @Setup(Level.Iteration)
         public void doSetup(){
             IFn require = Clojure.var("clojure.core", "require");
+            IFn deref = Clojure.var("clojure.core", "deref");
             require.invoke(Clojure.read("uncomplicate.neanderthal.core"));
             require.invoke(Clojure.read("uncomplicate.neanderthal.native"));
+            require.invoke(Clojure.read("uncomplicate.fluokitten.core"));
 
-            size = 128;
-            long sizel = 128;
-
+            fmap = Clojure.var("uncomplicate.fluokitten.core", "fmap!");
             mm = Clojure.var("uncomplicate.neanderthal.core", "mm!");
             fge = Clojure.var("uncomplicate.neanderthal.native", "fge");
 
-            n_m1 = fge.invoke(sizel, sizel);
-            n_m2 = fge.invoke(sizel, sizel);
-            n_r = fge.invoke(sizel, sizel);
+            IFn random = (IFn) deref.invoke(Clojure.var("clojure.core", "eval").invoke(Clojure.read(
+                    "(let [splittable-random (java.util.SplittableRandom.)]\n" +
+                            "  (defn random ^double [^double _]\n" +
+                            "    (.nextDouble ^java.util.SplittableRandom splittable-random)))"
+            )));
 
-            m1 = Nd4j.ones(size, size);
-            m2 = Nd4j.ones(m1.shape());
+            n_m1 = fmap.invoke(random, fge.invoke(size, size));
+            n_m2 = fmap.invoke(random, fge.invoke(size, size));
+            n_r = fge.invoke(size, size);
+
+            m1 = Nd4j.rand(size, size);
+            m2 = Nd4j.rand(m1.shape());
             r = Nd4j.createUninitialized(m1.shape(), 'f');
         }
     }
@@ -53,6 +60,7 @@ public class NeanderthalComparision_128x128 {
 
     @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void neanderthal_mm(SetupState state) {
-       state.mm.invoke(1.0f, state.n_m1, state.n_m2, 0.0f, state.n_r);
+        state.mm.invoke(1.0f, state.n_m1, state.n_m2, 0.0f, state.n_r);
     }
+
 }
