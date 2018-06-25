@@ -3,7 +3,7 @@ Simple Microbenchmarks for ND4J utilizing the JMH
 
 ## Building
 
-   mvn clean install
+   mvn clean package
 
 ## Running
 
