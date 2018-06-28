@@ -72,4 +72,17 @@ public class NeanderthalComparison_ChainedMmul_NonUniform {
     public void neanderthal_mm_chain(SetupState state) {
        state.mm.invoke(state.n_m1,state.n_m2,state.n_m3,state.n_m4,state.n_m5,state.n_m6);
     }
+
+    @Benchmark @BenchmarkMode(Mode.SampleTime) @OutputTimeUnit(TimeUnit.MICROSECONDS)
+    public void nd4j_gemm_chain(SetupState state) {
+        mm(state.m1, state.m2, state.m3, state.m4, state.m5, state.m6);
+    }
+
+    public INDArray mm(INDArray... mms){
+        INDArray tmp = mms[0];
+        for (int i = 1; i < mms.length; i++) {
+            tmp = Nd4j.gemm(tmp, mms[i], false, false);
+        }
+        return tmp;
+    }
 }
