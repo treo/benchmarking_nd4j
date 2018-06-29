@@ -51,14 +51,14 @@ public class NeanderthalComparison_ChainedMmul_NonUniform2 {
             n_m3 = fmap.invoke(random, fge.invoke(2300, 125));
             n_m4 = fmap.invoke(random, fge.invoke(125, 7700));
             n_m5 = fmap.invoke(random, fge.invoke(7700, 810));
-            n_m6 = fmap.invoke(random, fge.invoke(810, 1208));
+            n_m6 = fmap.invoke(random, fge.invoke(810, 100000));
 
-            m1 = Nd4j.rand(12, 13456);
+            m1 = Nd4j.rand(13, 13456);
             m2 = Nd4j.rand(13456, 2300);
             m3 = Nd4j.rand(2300, 125);
             m4 = Nd4j.rand(125, 7700);
             m5 = Nd4j.rand(7700, 810);
-            m6 = Nd4j.rand(810, 1208);
+            m6 = Nd4j.rand(810, 100000);
         }
     }
 
